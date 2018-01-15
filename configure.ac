@@ -495,7 +495,8 @@ utime.h \
 sys/utsname.h \
 sys/ipc.h \
 dlfcn.h \
-assert.h
+assert.h \
+nmmintrin.h
 ],[],[],[
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
@@ -589,9 +590,7 @@ PHP_SOCKADDR_CHECKS
 
 AC_MSG_CHECKING([checking building environment])
 AX_GCC_FUNC_ATTRIBUTE([ifunc])
-if test "$have_builtin_cpu_init" -eq 1; then
-	AX_CHECK_X86_FEATURES()
-fi
+AX_GCC_FUNC_ATTRIBUTE([target])
 
 dnl Check for IPv6 support
 AC_CACHE_CHECK([for IPv6 support], ac_cv_ipv6_support,

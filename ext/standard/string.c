@@ -35,11 +35,6 @@
 # include <monetary.h>
 #endif
 
-#ifdef __SSE4_2__
-#include <nmmintrin.h>
-#include "Zend/zend_bitset.h"
-#endif
-
 /*
  * This define is here because some versions of libintl redefine setlocale
  * to point to libintl_setlocale.  That's a ridiculous thing to do as far
@@ -3870,18 +3865,24 @@ PHPAPI zend_string *php_addcslashes(zend_string *str, int should_free, char *wha
 /* }}} */
 
 /* {{{ php_addslashes */
-#if HAVE_FUNC_ATTRIBUTE_IFUNC && defined(__SSE4_2__)
+#if HAVE_FUNC_ATTRIBUTE_IFUNC && HAVE_FUNC_ATTRIBUTE_TARGET && HAVE_NMMINTRIN_H
+
+#include <nmmintrin.h>
+#include "Zend/zend_bitset.h"
+
 PHPAPI zend_string *php_addslashes(zend_string *str, int should_free) __attribute__((ifunc("resolve_addslashes")));
 
-zend_string *php_addslashes_sse4(zend_string *str, int should_free);
+zend_string *php_addslashes_sse4(zend_string *str, int should_free) __attribute__((target("sse4.2")));
 zend_string *php_addslashes_default(zend_string *str, int should_free);
 
 /* {{{ resolve_addslashes */
 static void *resolve_addslashes() {
+#if PHP_HAVE_BUILTIN_CPU_INIT
 	__builtin_cpu_init();
 	if (__builtin_cpu_supports("sse4.2")) {
 		return php_addslashes_sse4;
 	}
+#endif
 	return  php_addslashes_default;
 }
 /* }}} */
