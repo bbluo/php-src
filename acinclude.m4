@@ -3245,6 +3245,8 @@ dnl Load the AX_CHECK_COMPILE_FLAG macro from the autoconf archive.
 m4_include([build/ax_check_compile_flag.m4])
 
 m4_include([build/ax_gcc_func_attribute.m4])
+m4_include([build/ax_gcc_x86_cpu_supports.m4])
+m4_include([build/ax_check_x86_features.m4])
 
 dnl PHP_CHECK_VALGRIND
 AC_DEFUN([PHP_CHECK_VALGRIND], [

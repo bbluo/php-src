@@ -566,6 +566,8 @@ dnl Check __builtin_ssubl_overflow
 PHP_CHECK_BUILTIN_SSUBL_OVERFLOW
 dnl Check __builtin_ssubll_overflow
 PHP_CHECK_BUILTIN_SSUBLL_OVERFLOW
+dnl Check __builtin_cpu_init
+PHP_CHECK_BUILTIN_CPU_INIT
 
 dnl Check for members of the stat structure
 AC_STRUCT_ST_BLKSIZE
@@ -1011,6 +1013,15 @@ if test "$PHP_FD_SETSIZE" != "no"; then
   fi
 else
   AC_MSG_RESULT([using system default])
+fi
+
+PHP_ARG_ENABLE(simd,  whether to enable SIMD supports,
+[  --enable-simd           Enable SIMD(SSE4, AVX etc) instructions support, NOTE: this may break cross-platform building], no, no)
+
+if test "$PHP_SIMD" = "yes"; then
+	if test "$have_builtin_cpu_init" -eq 1; then
+		AX_CHECK_X86_FEATURES()
+	fi
 fi
 
 dnl Extension configuration.
